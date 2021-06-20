@@ -13,13 +13,18 @@ discard BASS_ChannelPlay(file, cast[BOOL](false));
 proc skipPastSilence(file: HSTREAM) =
   var volume = cast[int16](BASS_ChannelGetLevel(file))
   while volume < 100:
-    var skipAmount = BASS_ChannelSeconds2Bytes(file, 0.02)
+    var skipAmount = BASS_ChannelSeconds2Bytes(file, 0.1)
     discard BASS_ChannelSetPosition(file, skipAmount, BASS_POS_RELATIVE)
     volume = cast[int16](BASS_ChannelGetLevel(file))
 
 file.skipPastSilence()
 while true:
-  sleep(1000)
+  var command = readChar(stdin)
+  case command:
+    of 'n':
+      file.skipPastSilence
+    else:
+      discard
 
 # discard BASS_ChannelPlay(file, cast[BOOL](false))
 # discard BASS_ChannelPause(file)
