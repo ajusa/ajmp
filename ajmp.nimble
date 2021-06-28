@@ -12,3 +12,4 @@ bin           = @["ajmp"]
 
 requires "nim >= 1.4.4"
 requires "nimbass"
+requires "cligen"
