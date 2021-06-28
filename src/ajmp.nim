@@ -2,6 +2,7 @@ import strutils, os, bitops, sugar, random
 
 import nimbass/bass
 import nimbass/bass_fx
+import notify
 
 converter toInt(x: QWORD): int = cast[int](x)
 converter toQWORD(x: int): QWORD = cast[QWORD](x)
@@ -19,6 +20,8 @@ proc main(songs: seq[string]) =
   var file, skipFile: HSTREAM
   proc playNextSong() =
     var nextSong = songs.sample()
+    var n: Notification = newNotification("ajmp", "Playing " & nextSong.extractFilename, "dialog-information")
+    discard n.show()
     if file != 0 and skipFile != 0: # free memory
       discard file.BASS_ChannelStop()
       discard skipFile.BASS_ChannelStop()
@@ -57,6 +60,8 @@ proc main(songs: seq[string]) =
     result = file.BASS_ChannelGetPosition(BASS_POS_BYTE)
     echo "Skipped ", file.BASS_ChannelBytes2Seconds(result.int - start.int), " seconds"
     echo "At ", file.BASS_ChannelBytes2Seconds(result.int), " seconds"
+    var n: Notification = newNotification("ajmp", "Finished skipping to next song", "dialog-information")
+    discard n.show()
 
 
 
